@@ -7,7 +7,7 @@ import java.util.Random;
 
 class MyCircle{
    private Circle circle;
-   private double radius;
+   private double x, y, radius;
    private Random r = new Random();
 
     public MyCircle() throws InterruptedException {
@@ -16,31 +16,33 @@ class MyCircle{
 
     private void setCircle(){
         radius = r.nextInt(40) + 10;
+        x = r.nextInt(100) + radius;
+        y = r.nextInt(300) + radius;
         circle = new Circle(radius);
         circle.setFill(Paint.valueOf(Color.color(
                 r.nextDouble(),
                 r.nextDouble(),
                 r.nextDouble()).toString()));
-        circle.setTranslateX(r.nextInt(100) + radius);
-        circle.setTranslateY(r.nextInt(300) + radius);
+        circle.setTranslateX(x);
+        circle.setTranslateY(y);
     }
 
-    public void action(double x, double y) {
+    public void action(double a, double b) {
         while (Main.isActive) {
-            //collide
-            if (circle.getTranslateX() + x + radius * 2 >= Main.W ||
-                    circle.getTranslateX() + x <= radius)
-                x = -x;
-            if (circle.getTranslateY() + y >= Main.H - radius * 2 ||
-                    circle.getTranslateY() + y <= radius)
-                y = -y;
+            //bounce
+            if (x + a + radius * 2 >= Main.W ||
+                    x + a <= radius)
+                a = -a;
+            if (y + b >= Main.H - radius * 2 ||
+                    y + b <= radius)
+                b = -b;
 
-            final double X = circle.getTranslateX() + x;
-            final double Y = circle.getTranslateY() + y;
+            y+=b;
+            x+=a;
 
             Platform.runLater(() -> {
-                circle.setTranslateX(X);
-                circle.setTranslateY(Y);
+                circle.setTranslateX(x);
+                circle.setTranslateY(y);
             });
 
             try {
